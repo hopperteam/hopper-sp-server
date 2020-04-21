@@ -1,45 +1,42 @@
 ﻿import * as express from 'express';
 import Handler from './handler';
-import User from '../types/user'
+import User from '../types/user';
+import * as utils from '../utils';
 
 export default class UserHandler extends Handler {
 
     constructor() {
         super();
-        this.getRouter().get("/users", this.getAllUsers.bind(this));
-        this.getRouter().get("/user", this.getUser.bind(this));
-        this.getRouter().post("/user", this.createUser.bind(this));
+        this.getRouter().post("/signUp", this.signUp.bind(this));
+        this.getRouter().post("/signIn", this.signIn.bind(this));
     }
 
-    private async getAllUsers(req: express.Request, res: express.Response): Promise<void> {
-        User.find((err: any, user: any) => {
-            if (err) {
-                res.send("Error!");
-            } else {
-                res.send(user);
-            }
-        });
+    private async signUp(req: express.Request, res: express. Response): Promise<void> {
+        try {
+            if (await User.findOne({ email: req.body.email }))
+                throw new Error("Email is already in use");
+            req.body.password = utils.hashPassword(req.body.password);
+            const user = await User.create(req.body);
+            res.json({
+                "status": "success",
+                "token": user._id
+            });
+        } catch (e) {
+            utils.handleError(e, res);
+        }
     }
 
-    private async getUser(req: express.Request, res: express.Response): Promise<void> {
-        User.findOne({ email: req.query.email}, (err: any, user: any) => {
-            if (err) {
-                res.send(err);
-            } else {
-                res.send(user);
-            }
-        });
-    }
-
-    private async createUser(req: express.Request, res: express.Response): Promise<void> {
-        const user = new User(req.body);
-
-        user.save((err: any) => {
-            if (err) {
-                res.send(err);
-            } else {
-                res.send(user);
-            }
-        });
+    private async signIn(req: express.Request, res: express. Response): Promise<void> {
+        try {
+            const user = await User.findOne({ email: req.body.email, password: utils.hashPassword(req.body.password) });
+            if (!user)
+                throw new Error("Invalid login data");
+            res.json({
+                "status": "success",
+                "token": user._id
+            });
+        } catch (e) {
+            utils.handleError(e, res);
+        }
     }
 }
