@@ -6,13 +6,13 @@ export default class UserHandler extends Handler {
 
     constructor() {
         super();
-        this.router.get("/", this.getAllUsers.bind(this));
-        this.router.get("/user", this.getUser.bind(this));
-        this.router.post("/user", this.createUser.bind(this));
+        this.getRouter().get("/users", this.getAllUsers.bind(this));
+        this.getRouter().get("/user", this.getUser.bind(this));
+        this.getRouter().post("/user", this.createUser.bind(this));
     }
 
     private async getAllUsers(req: express.Request, res: express.Response): Promise<void> {
-        const users = User.find((err: any, user: any) => {
+        User.find((err: any, user: any) => {
             if (err) {
                 res.send("Error!");
             } else {
@@ -22,7 +22,7 @@ export default class UserHandler extends Handler {
     }
 
     private async getUser(req: express.Request, res: express.Response): Promise<void> {
-        const user = User.findById(req.params.id, (err: any, user: any) => {
+        User.findOne({ email: req.query.email}, (err: any, user: any) => {
             if (err) {
                 res.send(err);
             } else {
@@ -32,7 +32,6 @@ export default class UserHandler extends Handler {
     }
 
     private async createUser(req: express.Request, res: express.Response): Promise<void> {
-        console.log(req.body);
         const user = new User(req.body);
 
         user.save((err: any) => {
