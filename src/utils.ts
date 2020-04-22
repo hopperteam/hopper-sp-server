@@ -18,3 +18,20 @@ export function hashPassword(password: string): string {
     hash.update(password);
     return hash.digest('hex');
 }
+
+export function createRsaPair(passphrase: string): crypto.KeyPairSyncResult<string, string> {
+    const { generateKeyPairSync } = crypto;
+    return generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: {
+            type: 'spki',
+            format: 'pem'
+        },
+        privateKeyEncoding: {
+            type: 'pkcs8',
+            format: 'pem',
+            cipher: 'aes-256-cbc',
+            passphrase: passphrase
+        }
+    });
+}
