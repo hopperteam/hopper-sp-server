@@ -35,3 +35,18 @@ export function createRsaPair(passphrase: string): crypto.KeyPairSyncResult<stri
         }
     });
 }
+
+export function encryptVerify(toEncrypt: object, passphrase: string, privateKey: string): object{
+    const sha = crypto.createHash('sha256');
+    sha.update(JSON.stringify(toEncrypt));
+    const hash = sha.digest('hex');
+    const buffer = Buffer.from(hash);
+    const encrypted = crypto.privateEncrypt(
+        {
+            key : privateKey,
+            passphrase: passphrase
+        },
+        buffer);
+
+    return {"verify":encrypted.toString('base64'), "data": toEncrypt};
+}
