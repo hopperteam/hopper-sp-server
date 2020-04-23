@@ -4,6 +4,7 @@ import mongoose = require("mongoose");
 import bodyParser = require('body-parser');
 import AppHandler from "./handler/appHandler";
 import AddresserHandler from "./handler/addresserHandler";
+import NotificationHandler from "./handler/notificationHandler";
 
 class SPTest {
     private readonly server: express.Application;
@@ -29,6 +30,7 @@ class SPTest {
         this.server.use(new UserHandler().getRouter());
         this.server.use(new AppHandler().getRouter());
         this.server.use(new AddresserHandler().getRouter());
+        this.server.use(new NotificationHandler().getRouter());
 
         this.server.listen(this.port, err => {
             if (err) {
