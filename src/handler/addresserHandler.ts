@@ -14,18 +14,18 @@ export default class AddresserHandler extends Handler {
 
     constructor() {
         super();
-        this.getRouter().get("/addressers/addresser/approve", this.getAll.bind(this));
+        this.getRouter().get("/addressers", this.getAll.bind(this));
         this.getRouter().post("/addresser", this.create.bind(this));
         this.getRouter().put("/addresser", this.approve.bind(this));
 
-        this.callbackUrl = "http://localhost:3000";
+        this.callbackUrl = "http://localhost:3001/addresser/approve";
         this.passphrase = "0adf5AD11A23adfAD524f8DFA9495sa7AD3DF6543";
         this.redirectUrl = "https://dev.hoppercloud.net/subscribe";
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const addresser = await Addresser.find({userId: req.query.token});
+            const addresser = await Addresser.find({userId: req.query.token}).populate('app');
             res.json(addresser);
         } catch (e) {
             utils.handleError(e, res);

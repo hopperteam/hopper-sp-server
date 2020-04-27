@@ -7,7 +7,7 @@ export async function createAddresser(body: any, userId: string, passphrase: str
         {userId: userId});
     const result = await Addresser.create(addresser);
 
-    const callback = callbackUrl + "?internalId=" + result._id;
+    const callback = callbackUrl + "?internalId=" + result._id + "&token=" + userId;
     const subscribtion = {
         id: app.id, callback: callback,
         accountName: addresser.accountName, requestedInfos: []
