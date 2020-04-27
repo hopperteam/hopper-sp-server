@@ -14,7 +14,7 @@ export default class AddresserHandler extends Handler {
 
     constructor() {
         super();
-        this.getRouter().get("/addressers", this.getAll.bind(this));
+        this.getRouter().get("/addressers/addresser/approve", this.getAll.bind(this));
         this.getRouter().post("/addresser", this.create.bind(this));
         this.getRouter().put("/addresser", this.approve.bind(this));
 

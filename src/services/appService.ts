@@ -56,7 +56,7 @@ export function updateRequest(url: string, id: string, requestObject: object): P
             (error, res, body) => {
             if (error) {
                 console.log(error);
-                throw new Error("Request to lead to error");
+                throw new Error("Request lead to error");
             }
             console.log(`statusCode: ${res.statusCode}`);
             if (body.status === 'success'){
