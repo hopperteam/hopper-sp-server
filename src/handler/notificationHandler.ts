@@ -19,7 +19,7 @@ export default class NotificationHandler extends Handler {
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const notifications = await Notification.find({userId: req.query.token});
+            const notifications = await Notification.find({userId: req.query.token}).populate('addresser');
             res.json(notifications);
         } catch (e) {
             utils.handleError(e, res);
