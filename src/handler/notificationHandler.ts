@@ -2,7 +2,7 @@ import Handler from "./handler";
 import * as express from "express";
 import * as utils from "../utils";
 import Notification from "../types/notification";
-import Addresser from "../types/addresser";
+import Subscriber from "../types/subscriber";
 import * as notificationService from "../services/notificationService";
 
 export default class NotificationHandler extends Handler {
@@ -19,7 +19,7 @@ export default class NotificationHandler extends Handler {
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const notifications = await Notification.find({userId: req.query.token}).populate('addresser');
+            const notifications = await Notification.find({userId: req.query.token}).populate('subscriber');
             res.json(notifications);
         } catch (e) {
             utils.handleError(e, res);
@@ -28,21 +28,21 @@ export default class NotificationHandler extends Handler {
 
     private async create(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const addresser = await Addresser.findOne({id: req.body.addresserId, userId: req.query.token});
-            if (!addresser)
-                throw new Error("Could not find addresser");
+            const subscriber = await Subscriber.findOne({id: req.body.subscriberId, userId: req.query.token});
+            if (!subscriber)
+                throw new Error("Could not find subscriber");
 
-            delete req.body.addresserId;
+            delete req.body.subscriberId;
             req.body.timestamp = Date.now();
             let notification = Object.assign({}, req.body, {actions: []});
 
-            const result = await notificationService.sendNotification(notification, this.notificationUrl, addresser.id);
+            const result = await notificationService.sendNotification(notification, this.notificationUrl, subscriber.id);
 
             if(result == null)
                 throw new Error("Request to hopper server was not successful");
 
             notification.id = result;
-            notification.addresser = addresser;
+            notification.subscriber = subscriber;
             notification.userId = req.query.token;
 
             const save = await Notification.create(notification);

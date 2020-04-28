@@ -1,12 +1,12 @@
 import Handler from "./handler";
 import * as express from "express";
 import * as utils from "../utils";
-import Addresser from "../types/addresser";
+import Subscriber from "../types/subscriber";
 import App from "../types/app";
 const querystring = require('querystring');
-import * as addresserService from "../services/addresserService";
+import * as subscriberService from "../services/subscriberService";
 
-export default class AddresserHandler extends Handler {
+export default class SubscriberHandler extends Handler {
 
     private callbackUrl: string;
     private passphrase: string;
@@ -14,19 +14,19 @@ export default class AddresserHandler extends Handler {
 
     constructor() {
         super();
-        this.getRouter().get("/addressers", this.getAll.bind(this));
-        this.getRouter().post("/addresser", this.create.bind(this));
-        this.getRouter().put("/addresser", this.approve.bind(this));
+        this.getRouter().get("/subscribers", this.getAll.bind(this));
+        this.getRouter().post("/subscriber", this.create.bind(this));
+        this.getRouter().put("/subscriber", this.approve.bind(this));
 
-        this.callbackUrl = "http://localhost:3001/addresser/approve";
+        this.callbackUrl = "http://localhost:5000/subscriber/approve";
         this.passphrase = "0adf5AD11A23adfAD524f8DFA9495sa7AD3DF6543";
         this.redirectUrl = "https://dev.hoppercloud.net/subscribe";
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
         try {
-            const addresser = await Addresser.find({userId: req.query.token}).populate('app');
-            res.json(addresser);
+            const subscriber = await Subscriber.find({userId: req.query.token}).populate('app');
+            res.json(subscriber);
         } catch (e) {
             utils.handleError(e, res);
         }
@@ -37,7 +37,7 @@ export default class AddresserHandler extends Handler {
             const app = await App.findOne({id: req.body.appId, userId: req.query.token});
             if (!app)
                 throw new Error("Could not find app");
-            const subscriptionRequest = await addresserService.createAddresser(req.body, req.query.token.toString(),
+            const subscriptionRequest = await subscriberService.createSubscriber(req.body, req.query.token.toString(),
                 this.passphrase, this.callbackUrl, app);
 
             const query = querystring.stringify({
@@ -56,14 +56,14 @@ export default class AddresserHandler extends Handler {
 
     private async approve(req: express.Request, res: express. Response): Promise<void> {
         try {
-            const addresser = await Addresser.findOne({_id: req.body.systemId, userId: req.query.token});
-            if(!addresser)
-                throw new Error("Could not find addresser");
-            addresser.id = req.body.id;
-            await addresser.updateOne(addresser);
+            const subscriber = await Subscriber.findOne({_id: req.body.systemId, userId: req.query.token});
+            if(!subscriber)
+                throw new Error("Could not find subscriber");
+            subscriber.id = req.body.id;
+            await subscriber.updateOne(subscriber);
             res.json({
                 "status": "success",
-                "appId": addresser.id
+                "appId": subscriber.id
             });
         } catch (e) {
             utils.handleError(e, res);

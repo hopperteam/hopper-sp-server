@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 export interface INotification extends mongoose.Document {
     id: string;
-    addresser: any;
+    subscriber: any;
     userId: string;
     heading: string;
     timestamp: number;
@@ -17,7 +17,7 @@ export interface INotification extends mongoose.Document {
 const NotificationSchema = new mongoose.Schema({
     id: { type: String, required: true},
     userId: { type: String, required: true, select: false, index: true },
-    addresser: { type: mongoose.Schema.Types.ObjectId, ref: 'Addresser', required: true },
+    subscriber: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscriber', required: true },
     heading: { type: String, required: true },
     timestamp: { type: Number, required: true },
     imageUrl: { type: String },

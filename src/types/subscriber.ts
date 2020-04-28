@@ -1,13 +1,13 @@
 import * as mongoose from 'mongoose';
 
-export interface IAddresser extends mongoose.Document {
+export interface ISubscriber extends mongoose.Document {
     id: string;
     accountName: string | undefined;
     app: any;
     userId: string;
 }
 
-const AddresserSchema = new mongoose.Schema({
+const SubscriberSchema = new mongoose.Schema({
     id: { type: String, default: "", index: true},
     userId: { type: String, required: true, select: false, index: true },
     accountName: { type: String },
@@ -16,10 +16,10 @@ const AddresserSchema = new mongoose.Schema({
     versionKey: false
 });
 
-AddresserSchema.set('toJSON', {
+SubscriberSchema.set('toJSON', {
     virtuals: true,
     transform: function (doc, ret) { delete ret._id }
 });
 
-const Addresser = mongoose.model<IAddresser>("Addresser", AddresserSchema);
-export default Addresser;
+const Subscriber = mongoose.model<ISubscriber>("Subscriber", SubscriberSchema);
+export default Subscriber;

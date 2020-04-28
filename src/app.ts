@@ -1,9 +1,10 @@
+require('dotenv').config(); // read .env files
 import express from 'express';
 import UserHandler from "./handler/userHandler";
 import mongoose = require("mongoose");
 import bodyParser = require('body-parser');
 import AppHandler from "./handler/appHandler";
-import AddresserHandler from "./handler/addresserHandler";
+import SubscriberHandler from "./handler/subscriberHandler";
 import NotificationHandler from "./handler/notificationHandler";
 
 class SPTest {
@@ -29,7 +30,7 @@ class SPTest {
         });
         this.server.use(new UserHandler().getRouter());
         this.server.use(new AppHandler().getRouter());
-        this.server.use(new AddresserHandler().getRouter());
+        this.server.use(new SubscriberHandler().getRouter());
         this.server.use(new NotificationHandler().getRouter());
 
         this.server.listen(this.port, err => {
