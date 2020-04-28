@@ -18,9 +18,9 @@ export default class SubscriberHandler extends Handler {
         this.getRouter().post("/subscriber", this.create.bind(this));
         this.getRouter().put("/subscriber", this.approve.bind(this));
 
-        this.callbackUrl = "http://localhost:5000/subscriber/approve";
-        this.passphrase = "0adf5AD11A23adfAD524f8DFA9495sa7AD3DF6543";
-        this.redirectUrl = "https://dev.hoppercloud.net/subscribe";
+        this.callbackUrl = utils.getEnv(process.env.CALLBACKURL, "CALLBACKURL");
+        this.callbackUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
+        this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {

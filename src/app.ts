@@ -14,8 +14,19 @@ class SPTest {
 
     constructor() {
         this.server = express();
-        this.port = 3000;
-        this.mongoUri = "mongodb://127.0.0.1:27017/local";
+
+        if(!process.env.PORT){
+            console.log("Missing PORT in environment definition");
+            process.exit();
+        }
+        this.port = Number(process.env.PORT);
+
+        if(!process.env.MONGOURI){
+            console.log("Missing MONGOURI in environment definition");
+            process.exit();
+        }
+        this.mongoUri = process.env.MONGOURI;
+
         this.server.use(bodyParser.json());
         this.server.set("query parser", "simple");
 
@@ -28,6 +39,7 @@ class SPTest {
                 console.log("Successfully Connected!");
             }
         });
+
         this.server.use(new UserHandler().getRouter());
         this.server.use(new AppHandler().getRouter());
         this.server.use(new SubscriberHandler().getRouter());

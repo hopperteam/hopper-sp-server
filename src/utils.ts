@@ -1,5 +1,6 @@
 ﻿import * as express from 'express';
 import * as crypto from 'crypto';
+require('dotenv').config(); // read .env files
 
 const SALT = "TL]{~eeo=u8J>j>@th8Psh4FQZ:^Wz)UMi;/vXst";
 
@@ -49,4 +50,12 @@ export function encryptVerify(toEncrypt: object, passphrase: string, privateKey:
         buffer);
 
     return {"verify":encrypted.toString('base64'), "data": toEncrypt};
+}
+
+export function getEnv(key: any, name: string): any{
+    if(!key){
+        console.log("Missing " + name + " in environment definition");
+        process.exit();
+    }
+    return key;
 }

@@ -14,7 +14,7 @@ export default class NotificationHandler extends Handler {
         this.getRouter().get("/notifications", this.getAll.bind(this));
         this.getRouter().post("/notification", this.create.bind(this));
 
-        this.notificationUrl = "https://api-dev.hoppercloud.net/v1/notification"
+        this.notificationUrl = utils.getEnv(process.env.NOTIFICATIONURL, "NOTIFICATIONURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {

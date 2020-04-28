@@ -3,7 +3,6 @@ import * as express from 'express';
 import App from "../types/app";
 import * as utils from "../utils";
 import * as appService from "../services/appService";
-const request = require('request');
 
 export default class AppHandler extends Handler {
 
@@ -17,9 +16,9 @@ export default class AppHandler extends Handler {
         this.getRouter().post("/app", this.create.bind(this));
         this.getRouter().put("/app", this.update.bind(this));
 
-        this.passphrase = "0adf5AD11A23adfAD524f8DFA9495sa7AD3DF6543";
-        this.baseUrl = "http://localhost";
-        this.spRequestUrl = "https://api-dev.hoppercloud.net/v1/app";
+        this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
+        this.baseUrl = utils.getEnv(process.env.BASEURL, "BASEURL");
+        this.spRequestUrl = utils.getEnv(process.env.SPREQUESTURL, "SPREQUESTURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
