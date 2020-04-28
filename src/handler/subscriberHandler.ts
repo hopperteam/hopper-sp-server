@@ -19,7 +19,7 @@ export default class SubscriberHandler extends Handler {
         this.getRouter().put("/subscriber", this.approve.bind(this));
 
         this.callbackUrl = utils.getEnv(process.env.CALLBACKURL, "CALLBACKURL");
-        this.callbackUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
+        this.redirectUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
         this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
     }
 
