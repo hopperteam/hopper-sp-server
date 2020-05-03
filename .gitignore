@@ -2,5 +2,6 @@
 node_modules/
 .idea/
 dist/
+.build/
 tslint.json
 .env
