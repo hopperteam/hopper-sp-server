@@ -1,4 +1,3 @@
-require('dotenv').config(); // read .env files
 import express from 'express';
 import UserHandler from "./handler/userHandler";
 import mongoose = require("mongoose");

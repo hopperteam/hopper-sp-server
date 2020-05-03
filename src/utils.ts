@@ -1,6 +1,5 @@
 ﻿import * as express from 'express';
 import * as crypto from 'crypto';
-require('dotenv').config(); // read .env files
 
 const SALT = "TL]{~eeo=u8J>j>@th8Psh4FQZ:^Wz)UMi;/vXst";
 
