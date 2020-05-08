@@ -20,7 +20,12 @@ class SPTest {
 
     }
     public async start(): Promise<void> {
-        mongoose.connect(Config.instance.mongoUri, (err: any) => {
+        mongoose.connect(Config.instance.mongoUri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        }, (err: any) => {
             if (err) {
                 console.log(err.message);
             } else {
