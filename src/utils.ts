@@ -56,5 +56,6 @@ export function getEnv(key: any, name: string): any{
         console.log("Missing " + name + " in environment definition");
         process.exit();
     }
+
     return key;
 }

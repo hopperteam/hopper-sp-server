@@ -5,33 +5,22 @@ import bodyParser = require('body-parser');
 import AppHandler from "./handler/appHandler";
 import SubscriberHandler from "./handler/subscriberHandler";
 import NotificationHandler from "./handler/notificationHandler";
+import {Config} from "./config";
 
 class SPTest {
     private readonly server: express.Application;
-    private readonly port: number;
-    private readonly mongoUri: string;
 
     constructor() {
         this.server = express();
 
-        if(!process.env.PORT){
-            console.log("Missing PORT in environment definition");
-            process.exit();
-        }
-        this.port = Number(process.env.PORT);
-
-        if(!process.env.MONGOURI){
-            console.log("Missing MONGOURI in environment definition");
-            process.exit();
-        }
-        this.mongoUri = process.env.MONGOURI;
+        Config.loadConfig();
 
         this.server.use(bodyParser.json());
         this.server.set("query parser", "simple");
 
     }
     public async start(): Promise<void> {
-        mongoose.connect(this.mongoUri, (err: any) => {
+        mongoose.connect(Config.instance.mongoUri, (err: any) => {
             if (err) {
                 console.log(err.message);
             } else {
@@ -44,11 +33,11 @@ class SPTest {
         this.server.use(new SubscriberHandler().getRouter());
         this.server.use(new NotificationHandler().getRouter());
 
-        this.server.listen(this.port, err => {
+        this.server.listen(Config.instance.port, err => {
             if (err) {
                 return console.error(err);
             }
-            return console.log(`server is listening on ${this.port}`);
+            return console.log(`server is listening on ${Config.instance.port}`);
         });
     }
 }
