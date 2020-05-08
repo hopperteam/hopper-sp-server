@@ -5,12 +5,13 @@ import Subscriber from "../types/subscriber";
 import App from "../types/app";
 const querystring = require('querystring');
 import * as subscriberService from "../services/subscriberService";
+import {Config} from "../config";
 
 export default class SubscriberHandler extends Handler {
 
-    private callbackUrl: string;
-    private passphrase: string;
-    private redirectUrl: string;
+    // private callbackUrl: string;
+    // private passphrase: string;
+    // private redirectUrl: string;
 
     constructor() {
         super();
@@ -18,9 +19,9 @@ export default class SubscriberHandler extends Handler {
         this.getRouter().post("/subscriber", this.create.bind(this));
         this.getRouter().put("/subscriber", this.approve.bind(this));
 
-        this.callbackUrl = utils.getEnv(process.env.CALLBACKURL, "CALLBACKURL");
-        this.redirectUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
-        this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
+        // this.callbackUrl = utils.getEnv(process.env.CALLBACKURL, "CALLBACKURL");
+        // this.redirectUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
+        // this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
@@ -38,7 +39,7 @@ export default class SubscriberHandler extends Handler {
             if (!app)
                 throw new Error("Could not find app");
             const subscriptionRequest = await subscriberService.createSubscriber(req.body, req.query.token.toString(),
-                this.passphrase, this.callbackUrl, app);
+                Config.instance.passphrase, Config.instance.callbackUrl, app);
 
             const query = querystring.stringify({
                 "id": app.id,
@@ -46,7 +47,7 @@ export default class SubscriberHandler extends Handler {
             });
             res.json({
                 "status": "success",
-                "redirect": this.redirectUrl + "?" + query
+                "redirect": Config.instance.redirectUrl + "?" + query
             });
 
         } catch (e) {

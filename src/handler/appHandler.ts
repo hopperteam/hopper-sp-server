@@ -3,12 +3,13 @@ import * as express from 'express';
 import App from "../types/app";
 import * as utils from "../utils";
 import * as appService from "../services/appService";
+import {Config} from "../config";
 
 export default class AppHandler extends Handler {
 
-    private passphrase: string;
-    private baseUrl: string;
-    private spRequestUrl: string;
+    //private passphrase: string;
+    //private baseUrl: string;
+    //private spRequestUrl: string;
 
     constructor() {
         super();
@@ -16,9 +17,9 @@ export default class AppHandler extends Handler {
         this.getRouter().post("/app", this.create.bind(this));
         this.getRouter().put("/app", this.update.bind(this));
 
-        this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
-        this.baseUrl = utils.getEnv(process.env.BASEURL, "BASEURL");
-        this.spRequestUrl = utils.getEnv(process.env.SPREQUESTURL, "SPREQUESTURL");
+        //this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
+        //this.baseUrl = utils.getEnv(process.env.BASEURL, "BASEURL");
+        //this.spRequestUrl = utils.getEnv(process.env.SPREQUESTURL, "SPREQUESTURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
@@ -33,7 +34,7 @@ export default class AppHandler extends Handler {
     private async create(req: express.Request, res: express. Response): Promise<void> {
         try {
             const app = await appService.createApp(req.body, req.query.token.toString(),
-                this.passphrase, this.baseUrl, this.spRequestUrl);
+                Config.instance.passphrase, Config.instance.baseUrl, Config.instance.spRequestUrl);
             if(app == null)
                 throw new Error("Request to hopper server was not successful");
             const result = await App.create(app);
@@ -52,15 +53,15 @@ export default class AppHandler extends Handler {
             if (!app)
                 throw new Error("Could not find app");
             const privatKeyBefore = app.privateKey;
-            const update = appService.updateApp(app, req.body, this.passphrase);
+            const update = appService.updateApp(app, req.body, Config.instance.passphrase);
             const strippedApp = Object.assign({}, {
                 name: update.name, imageUrl: update.imageUrl,
                 isHidden: update.isHidden, manageUrl: update.manageUrl,
                 contactEmail: update.contactEmail, cert: update.cert
             });
 
-            const requestObject = utils.encryptVerify(strippedApp, this.passphrase, privatKeyBefore);
-            const status = await appService.updateRequest(this.spRequestUrl, app.id, requestObject);
+            const requestObject = utils.encryptVerify(strippedApp, Config.instance.passphrase, privatKeyBefore);
+            const status = await appService.updateRequest(Config.instance.spRequestUrl, app.id, requestObject);
             if(status){
                 await app.updateOne(update);
                 res.json({

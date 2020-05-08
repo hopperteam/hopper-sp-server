@@ -50,12 +50,3 @@ export function encryptVerify(toEncrypt: object, passphrase: string, privateKey:
 
     return {"verify":encrypted.toString('base64'), "data": toEncrypt};
 }
-
-export function getEnv(key: any, name: string): any{
-    if(!key){
-        console.log("Missing " + name + " in environment definition");
-        process.exit();
-    }
-
-    return key;
-}

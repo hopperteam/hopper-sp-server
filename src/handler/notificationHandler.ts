@@ -4,17 +4,18 @@ import * as utils from "../utils";
 import Notification from "../types/notification";
 import Subscriber from "../types/subscriber";
 import * as notificationService from "../services/notificationService";
+import {Config} from "../config";
 
 export default class NotificationHandler extends Handler {
 
-    private notificationUrl: string;
+    // private notificationUrl: string;
 
     constructor() {
         super();
         this.getRouter().get("/notifications", this.getAll.bind(this));
         this.getRouter().post("/notification", this.create.bind(this));
 
-        this.notificationUrl = utils.getEnv(process.env.NOTIFICATIONURL, "NOTIFICATIONURL");
+        // this.notificationUrl = utils.getEnv(process.env.NOTIFICATIONURL, "NOTIFICATIONURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
@@ -36,7 +37,7 @@ export default class NotificationHandler extends Handler {
             req.body.timestamp = Date.now();
             let notification = Object.assign({}, req.body, {actions: []});
 
-            const result = await notificationService.sendNotification(notification, this.notificationUrl, subscriber.id);
+            const result = await notificationService.sendNotification(notification, Config.instance.notificationUrl, subscriber.id);
 
             if(result == null)
                 throw new Error("Request to hopper server was not successful");
