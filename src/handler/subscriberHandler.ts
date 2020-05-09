@@ -4,7 +4,7 @@ import * as utils from "../utils";
 import Subscriber from "../types/subscriber";
 import App from "../types/app";
 const querystring = require('querystring');
-import * as subscriberService from "../services/subscriberService";
+import * as subscriberAPI from "../apis/subscriberAPI";
 import {Config} from "../config";
 
 export default class SubscriberHandler extends Handler {
@@ -38,7 +38,7 @@ export default class SubscriberHandler extends Handler {
             const app = await App.findOne({id: req.body.appId, userId: req.query.token});
             if (!app)
                 throw new Error("Could not find app");
-            const subscriptionRequest = await subscriberService.createSubscriber(req.body, req.query.token.toString(),
+            const subscriptionRequest = await subscriberAPI.createSubscriber(req.body, req.query.token.toString(),
                 Config.instance.passphrase, Config.instance.callbackUrl, app);
 
             const query = querystring.stringify({
