@@ -1,5 +1,3 @@
-import * as utils from "./utils";
-
 export namespace Config {
     export function loadConfig(){
         var data: any = {};

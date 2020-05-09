@@ -7,19 +7,11 @@ import {Config} from "../config";
 
 export default class AppHandler extends Handler {
 
-    //private passphrase: string;
-    //private baseUrl: string;
-    //private spRequestUrl: string;
-
     constructor() {
         super();
         this.getRouter().get("/apps", this.getAll.bind(this));
         this.getRouter().post("/app", this.create.bind(this));
         this.getRouter().put("/app", this.update.bind(this));
-
-        //this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
-        //this.baseUrl = utils.getEnv(process.env.BASEURL, "BASEURL");
-        //this.spRequestUrl = utils.getEnv(process.env.SPREQUESTURL, "SPREQUESTURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
@@ -97,7 +89,7 @@ export default class AppHandler extends Handler {
             manageUrl: update.manageUrl, contactEmail: update.contactEmail
         });
 
-        //ceck for new cert
+        //check for new cert
         if(update.newCert == true){
             const {publicKey, privateKey} = utils.createRsaPair(passphrase);
             const cert = Buffer.from(publicKey).toString('base64');

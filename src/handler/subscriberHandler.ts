@@ -9,19 +9,11 @@ import {Config} from "../config";
 
 export default class SubscriberHandler extends Handler {
 
-    // private callbackUrl: string;
-    // private passphrase: string;
-    // private redirectUrl: string;
-
     constructor() {
         super();
         this.getRouter().get("/subscribers", this.getAll.bind(this));
         this.getRouter().post("/subscriber", this.create.bind(this));
         this.getRouter().put("/subscriber", this.approve.bind(this));
-
-        // this.callbackUrl = utils.getEnv(process.env.CALLBACKURL, "CALLBACKURL");
-        // this.redirectUrl = utils.getEnv(process.env.REDIRECTURL, "REDIRECTURL");
-        // this.passphrase = utils.getEnv(process.env.PASSPHRASE, "PASSPHRASE");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {

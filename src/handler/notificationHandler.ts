@@ -8,14 +8,10 @@ import {Config} from "../config";
 
 export default class NotificationHandler extends Handler {
 
-    // private notificationUrl: string;
-
     constructor() {
         super();
         this.getRouter().get("/notifications", this.getAll.bind(this));
         this.getRouter().post("/notification", this.create.bind(this));
-
-        // this.notificationUrl = utils.getEnv(process.env.NOTIFICATIONURL, "NOTIFICATIONURL");
     }
 
     private async getAll(req: express.Request, res: express.Response): Promise<void> {
