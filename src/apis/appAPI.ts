@@ -7,7 +7,7 @@ export function register(requestObject: object, url: string, serviceProvider: ob
                 console.log(error);
                 throw new Error("Request to lead to error");
             }
-            console.log(`statusCode: ${res.statusCode}`)
+            console.log(`statusCode: ${res.statusCode}`);
             if (body.status === 'success'){
                 Object.assign(serviceProvider, requestObject, {id: body.id});
                 resolve(serviceProvider);
