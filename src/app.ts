@@ -7,7 +7,7 @@ import SubscriberHandler from "./handler/subscriberHandler";
 import NotificationHandler from "./handler/notificationHandler";
 import {Config} from "./config";
 
-class SPTest {
+class SPServer {
     private readonly server: express.Application;
 
     constructor() {
@@ -47,5 +47,5 @@ class SPTest {
     }
 }
 
-const app = new SPTest();
+const app = new SPServer();
 app.start();
