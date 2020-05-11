@@ -25,10 +25,11 @@ export default class AppHandler extends Handler {
 
     private async create(req: express.Request, res: express. Response): Promise<void> {
         try {
-            const app = await this.createApp(req.body, req.query.token.toString(),
+            const response = await this.createApp(req.body, req.query.token.toString(),
                 Config.instance.passphrase, Config.instance.baseUrl, Config.instance.spRequestUrl);
-            if(app == null)
-                throw new Error("Request to hopper server was not successful");
+            if(!response.status.toString().localeCompare("error"))
+                throw new Error(response.message);
+            const app = response.message;
             const result = await App.create(app);
             res.json({
                 "status": "success",
@@ -54,14 +55,14 @@ export default class AppHandler extends Handler {
 
             const requestObject = utils.encryptVerify(strippedApp, Config.instance.passphrase, privatKeyBefore);
             const status = await appAPI.updateRequest(Config.instance.spRequestUrl, app.id, requestObject);
-            if(status){
+            if(!status.localeCompare("success")){
                 await app.updateOne(update);
                 res.json({
                     "status": "success",
                     "appId": app.id
                 });
             } else{
-                throw new Error("Request to hopper server was not successful");
+                throw new Error(status);
             }
         } catch (e) {
             utils.handleError(e, res);
@@ -69,7 +70,7 @@ export default class AppHandler extends Handler {
     }
 
     private async createApp(body: object, userId: string,
-                                    passphrase: string, baseUrl: string, spRequestUrl: string): Promise<object> {
+                                    passphrase: string, baseUrl: string, spRequestUrl: string): Promise<any> {
         //create request object
         let requestObject = body;
         const {publicKey, privateKey} = utils.createRsaPair(passphrase);

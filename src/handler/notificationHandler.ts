@@ -35,10 +35,10 @@ export default class NotificationHandler extends Handler {
 
             const result = await notificationAPI.sendNotification(notification, Config.instance.notificationUrl, subscriber.id);
 
-            if(result == null)
-                throw new Error("Request to hopper server was not successful");
+            if(!result.status.toString().localeCompare("error"))
+                throw new Error(result.message);
 
-            notification.id = result;
+            notification.id = result.message;
             notification.subscriber = subscriber;
             notification.userId = req.query.token;
 

@@ -1,6 +1,6 @@
 const request = require('request');
 
-export async function sendNotification(notification: object, url: string, subscriptionId: string): Promise<string>{
+export async function sendNotification(notification: object, url: string, subscriptionId: string): Promise<any>{
     return new Promise((resolve, reject) => {
         request.post(url, {json:{subscriptionId: subscriptionId, notification:notification}}, (error, res, body) => {
             if (error) {
@@ -9,9 +9,9 @@ export async function sendNotification(notification: object, url: string, subscr
             }
             console.log(`statusCode: ${res.statusCode}`);
             if (body.status === 'success'){
-                resolve(body.id);
+                resolve({status: "success", message: body.id});
             } else {
-                resolve(null);
+                resolve({status: "error", message: body.reason});
             }
         });
     });
