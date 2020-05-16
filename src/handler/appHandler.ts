@@ -53,8 +53,8 @@ export default class AppHandler extends Handler {
                 contactEmail: update.contactEmail, cert: update.cert
             });
 
-            const requestObject = utils.encryptVerify(strippedApp, Config.instance.passphrase, privatKeyBefore);
-            const status = await appAPI.updateRequest(Config.instance.spRequestUrl, app.id, requestObject);
+            const requestStr = utils.encryptVerify(strippedApp, Config.instance.passphrase, privatKeyBefore);
+            const status = await appAPI.updateRequest(Config.instance.spRequestUrl, app.id, requestStr);
             if(!status.localeCompare("success")){
                 await app.updateOne(update);
                 res.json({

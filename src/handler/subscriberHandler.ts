@@ -35,7 +35,7 @@ export default class SubscriberHandler extends Handler {
 
             const query = querystring.stringify({
                 "id": app.id,
-                "content": Buffer.from(JSON.stringify(subscriptionRequest)).toString('base64')
+                "content": subscriptionRequest
             });
             res.json({
                 "status": "success",

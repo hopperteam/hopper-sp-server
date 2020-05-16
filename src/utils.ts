@@ -1,5 +1,6 @@
 ﻿import * as express from 'express';
 import crypto from 'crypto';
+import * as jwt from 'jsonwebtoken';
 
 const SALT = "TL]{~eeo=u8J>j>@th8Psh4FQZ:^Wz)UMi;/vXst";
 
@@ -24,7 +25,7 @@ export function createRsaPair(passphrase: string): crypto.KeyPairSyncResult<stri
     return generateKeyPairSync('rsa', {
         modulusLength: 2048,
         publicKeyEncoding: {
-            type: 'spki',
+            type: 'pkcs1',
             format: 'pem'
         },
         privateKeyEncoding: {
@@ -36,17 +37,11 @@ export function createRsaPair(passphrase: string): crypto.KeyPairSyncResult<stri
     });
 }
 
-export function encryptVerify(toEncrypt: object, passphrase: string, privateKey: string): object{
-    const sha = crypto.createHash('sha256');
-    sha.update(JSON.stringify(toEncrypt));
-    const hash = sha.digest('hex');
-    const buffer = Buffer.from(hash);
-    const encrypted = crypto.privateEncrypt(
+export function encryptVerify(toEncrypt: object, passphrase: string, privateKey: string): string {
+    return jwt.sign(toEncrypt,
         {
             key : privateKey,
             passphrase: passphrase
-        },
-        buffer);
-
-    return {"verify":encrypted.toString('base64'), "data": toEncrypt};
+    }, { algorithm: 'RS256' })
 }
+

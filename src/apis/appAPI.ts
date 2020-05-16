@@ -18,9 +18,9 @@ export function register(requestObject: object, url: string, serviceProvider: ob
     });
 }
 
-export function updateRequest(url: string, id: string, requestObject: object): Promise<string> {
+export function updateRequest(url: string, id: string, requestStr: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        request.put(url, {json: {id: id, content: Buffer.from(JSON.stringify(requestObject)).toString('base64')}},
+        request.put(url, {json: {id: id, content: requestStr}},
             (error, res, body) => {
             if (error) {
                 console.log(error);
